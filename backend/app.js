@@ -1,10 +1,8 @@
-//MONGODB U/N: hotSaucy PASS: qazQAZ234
-//MONGODB CONNECTION: mongodb+srv://hotSaucy:<password>@cluster0.s9rpb.mongodb.net/<dbname>?retryWrites=true&w=majority
-
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+
+const Sauce = require('./models/sauce');
 
 const app = express();
 
@@ -30,30 +28,118 @@ app.use(bodyParser.json());
 
 //MIDDLEWARE
 
-app.post('/api/stuff', (req, res, next) => {
- console.log(req.body);
- res.status(201).json({
-  message: 'Thing created successfully!'
+//POST SAUCE
+
+app.post('/api/sauces', (req, res, next) => {
+ const sauce = new Sauce({
+  userId: req.body.userId,
+  name: req.body.name,
+  manufacturer: req.body.manufacturer,
+  description: req.body.description,
+  mainPepper: req.body.mainPepper,
+  imageUrl: req.body.imageUrl,
+  heat: req.body.heat,
+  likes: req.body.likes,
+  dislikes: req.body.dislikes,
+  usersLiked: req.body.usersLiked,
+  usersDisliked: req.body.usersDisliked,
  });
+ sauce.save().then(
+  () => {
+   res.status(201).json({
+    message: 'Successfully posted a sauce'
+   });
+  }
+ ).catch(
+  (error) => {
+   res.status(400).json({
+    error: error
+   });
+  }
+ );
 });
 
-app.use((req, res, next) => {
- console.log('Request received!');
- next();
+//GET ALL SAUCE
+
+app.get('/api/sauces', (req, res, next) => {
+ Sauce.find().then(
+  (sauces) => {
+   res.status(200).json(sauces);
+  }
+ ).catch(
+  (error) => {
+   res.status(400).json({
+    error: error
+   });
+  }
+ );
 });
 
-app.use((req, res, next) => {
- res.status(201);
- next();
+//GET ONE SAUCE
+
+app.get('/api/sauces/:id', (req, res, next) => {
+ Sauces.findOne({
+  _id: req.params.id
+ }).then(
+  (sauces) => {
+   res.status(200).json(sauces);
+  }
+ ).catch(
+  (error) => {
+   res.status(404).json({
+    error: error
+   });
+  }
+ );
 });
 
-app.use((req, res, next) => {
- res.json({ message: 'Your request freaking ruled!' });
- next();
+//MODIFY SAUCE
+
+app.put('/api/sauces/:id', (req, res, next) => {
+ const sauce = new Sauce({
+  _id: req.params.id,
+  name: req.body.name,
+  manufacturer: req.body.manufacturer,
+  description: req.body.description,
+  mainPepper: req.body.mainPepper,
+  imageUrl: req.body.imageUrl,
+  heat: req.body.heat,
+  likes: req.body.likes,
+  dislikes: req.body.dislikes,
+  usersLiked: req.body.usersLiked,
+  usersDisliked: req.body.usersDisliked,
+ });
+ Sauce.updateOne({ _id: req.params.id }, sauce).then(
+  () => {
+   res.status(201).json({
+    message: 'Sauce updated successfully!'
+   });
+  }
+ ).catch(
+  (error) => {
+   res.status(400).json({
+    error: error
+   });
+  }
+ );
 });
 
-app.use((req, res, next) => {
- console.log('Response sent successfully!');
+//DELETE A SAUCE
+
+app.delete('/api/sauces/:id', (req, res, next) => {
+ Sauce.deleteOne({ _id: req.params.id }).then(
+  () => {
+   res.status(200).json({
+    message: 'Deleted!'
+   });
+  }
+ ).catch(
+  (error) => {
+   res.status(400).json({
+    error: error
+   });
+  }
+ );
 });
 
 module.exports = app;
