@@ -26,6 +26,7 @@ app.use((req, res, next) => {
 //GLOBAL
 
 app.use(bodyParser.json());
+
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 

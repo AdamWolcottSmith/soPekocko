@@ -1,6 +1,7 @@
 const Sauce = require('../models/sauce');
 
 exports.createThing = (req, res, next) => {
+ console.log(req);
  const sauce = new Sauce({
   userId: req.body.userId,
   name: req.body.name,
