@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const Sauce = require('./models/sauce');
+const Sauce = require('../models/sauce');
 
 //POST SAUCE
 
@@ -37,7 +37,7 @@ router.post('/', (req, res, next) => {
 //GET ONE SAUCE
 
 router.get('/:id', (req, res, next) => {
- Sauces.findOne({
+ Sauce.findOne({
   _id: req.params.id
  }).then(
   (sauces) => {
@@ -103,7 +103,7 @@ router.delete('/:id', (req, res, next) => {
 
 //GET ALL SAUCE
 
-router.get('/' + '', (req, res, next) => {
+router.get('/', (req, res, next) => {
  Sauce.find().then(
   (sauces) => {
    res.status(200).json(sauces);
