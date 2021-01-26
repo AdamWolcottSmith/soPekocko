@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const stuffRoutes = require('./routes/stuff');
+
 const Sauce = require('./models/sauce');
 
 const app = express();
@@ -25,121 +27,6 @@ app.use((req, res, next) => {
 //GLOBAL
 
 app.use(bodyParser.json());
-
-//MIDDLEWARE
-
-//POST SAUCE
-
-app.post('/api/sauces', (req, res, next) => {
- const sauce = new Sauce({
-  userId: req.body.userId,
-  name: req.body.name,
-  manufacturer: req.body.manufacturer,
-  description: req.body.description,
-  mainPepper: req.body.mainPepper,
-  imageUrl: req.body.imageUrl,
-  heat: req.body.heat,
-  likes: req.body.likes,
-  dislikes: req.body.dislikes,
-  usersLiked: req.body.usersLiked,
-  usersDisliked: req.body.usersDisliked,
- });
- sauce.save().then(
-  () => {
-   res.status(201).json({
-    message: 'Successfully posted a sauce'
-   });
-  }
- ).catch(
-  (error) => {
-   res.status(400).json({
-    error: error
-   });
-  }
- );
-});
-
-//GET ALL SAUCE
-
-app.get('/api/sauces', (req, res, next) => {
- Sauce.find().then(
-  (sauces) => {
-   res.status(200).json(sauces);
-  }
- ).catch(
-  (error) => {
-   res.status(400).json({
-    error: error
-   });
-  }
- );
-});
-
-//GET ONE SAUCE
-
-app.get('/api/sauces/:id', (req, res, next) => {
- Sauces.findOne({
-  _id: req.params.id
- }).then(
-  (sauces) => {
-   res.status(200).json(sauces);
-  }
- ).catch(
-  (error) => {
-   res.status(404).json({
-    error: error
-   });
-  }
- );
-});
-
-//MODIFY SAUCE
-
-app.put('/api/sauces/:id', (req, res, next) => {
- const sauce = new Sauce({
-  _id: req.params.id,
-  name: req.body.name,
-  manufacturer: req.body.manufacturer,
-  description: req.body.description,
-  mainPepper: req.body.mainPepper,
-  imageUrl: req.body.imageUrl,
-  heat: req.body.heat,
-  likes: req.body.likes,
-  dislikes: req.body.dislikes,
-  usersLiked: req.body.usersLiked,
-  usersDisliked: req.body.usersDisliked,
- });
- Sauce.updateOne({ _id: req.params.id }, sauce).then(
-  () => {
-   res.status(201).json({
-    message: 'Sauce updated successfully!'
-   });
-  }
- ).catch(
-  (error) => {
-   res.status(400).json({
-    error: error
-   });
-  }
- );
-});
-
-//DELETE A SAUCE
-
-app.delete('/api/sauces/:id', (req, res, next) => {
- Sauce.deleteOne({ _id: req.params.id }).then(
-  () => {
-   res.status(200).json({
-    message: 'Deleted!'
-   });
-  }
- ).catch(
-  (error) => {
-   res.status(400).json({
-    error: error
-   });
-  }
- );
-});
+app.use('/api/stuff', stuffRoutes);
 
 module.exports = app;
