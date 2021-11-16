@@ -1,5 +1,8 @@
 # HOT TAKES #
 
+Backend project using node.js, express and mongoDB as the database for hot sauce review site
+
+
 ## Installation ##
 Clone this repo, run `npm install`.
 
